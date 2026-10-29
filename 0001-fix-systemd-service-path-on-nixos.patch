@@ -1,0 +1,25 @@
+From 098a93d24efcfa37bb9ccb99b3e4795ebb743c6e Mon Sep 17 00:00:00 2001
+From: june-fish <git@june.fish>
+Date: Thu, 29 Oct 2026 17:55:48 -0500
+Subject: [PATCH] fix systemd service path on nixos
+
+---
+ cmd/tailmux/service_linux.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmd/tailmux/service_linux.go b/cmd/tailmux/service_linux.go
+index a700b8d..ad56db0 100644
+--- a/cmd/tailmux/service_linux.go
++++ b/cmd/tailmux/service_linux.go
+@@ -13,7 +13,7 @@ const (
+ 	linuxBinary = "/usr/local/bin/tailmux"
+ 	linuxConfig = "/etc/tailmux/config.json"
+ 	linuxState  = "/var/lib/tailmux"
+-	linuxUnit   = "/etc/systemd/system/tailmux.service"
++	linuxUnit   = "/var/run/systemd/system/tailmux.service"
+ )
+ 
+ func systemConfigPath() string { return linuxConfig }
+-- 
+2.54.0
+
