@@ -6,9 +6,9 @@
 
 buildGo127Module (finalAttrs: {
   pname = "tailmux";
-  version = "1.3.0";
+  version = "1.5.0";
 
-  patches =[ ./0001-fix-systemd-service-path-on-nixos.patch ];
+  patches = [ ./0001-fix-systemd-service-path-on-nixos.patch ];
 
   src = fetchFromGitHub {
     owner = "GrowlyX";

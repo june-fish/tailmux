@@ -18,7 +18,7 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "tailmux";
-  version = "v1.3.0";
+  version = "v1.5.0";
   src = fetchgit {
     url = "https://github.com/GrowlyX/tailmux";
     tag = "v1.3.0";
