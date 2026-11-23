@@ -19,14 +19,15 @@ jobs:
       - name: Update flake inputs
         run: nix flake update
 
-      # Bumps rev/hash/version to the latest upstream master commit, then
-      # builds the package (including its test suite) so broken updates fail here.
-      - name: Update quick-fedora-mirror
-        run: nix run nixpkgs#nix-update -- --flake --version=branch --build quick-fedora-mirror
+      # Bumps version, src hash and vendorHash to the latest upstream release,
+      # then builds it, so a stale hash or a patch that no longer applies fails
+      # here instead of on someone's machine.
+      - name: Update tailmux
+        run: nix run nixpkgs#nix-update -- --flake --build tailmux
 
       # nix-update skips the build when the package itself is unchanged.
       - name: Build
-        run: nix build .#quick-fedora-mirror
+        run: nix build .#tailmux
 
       - name: Commit and push
         run: |
@@ -36,8 +37,8 @@ jobs:
           fi
 
           msgs=()
-          if ! git diff --quiet -- package.nix; then
-            msgs+=("quick-fedora-mirror: update to $(nix eval --raw .#quick-fedora-mirror.version)")
+          if ! git diff --quiet -- tailmux.nix; then
+            msgs+=("tailmux: update to $(nix eval --raw .#tailmux.version)")
           fi
           if ! git diff --quiet -- flake.lock; then
             msgs+=("flake.lock: update")

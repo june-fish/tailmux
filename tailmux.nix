@@ -14,10 +14,10 @@ buildGo127Module (finalAttrs: {
     owner = "GrowlyX";
     repo = "tailmux";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-ql5Jp5OxL6dNU/VVBC7xhCJVVeUK4MXHrH/dVHXWL8E=";
+    hash = "sha256-4iUtfB8qm3seAlH4vRpfnWk+4wie6xLfc6OUnZnLpqI=";
   };
 
-  vendorHash = "sha256-NlCTbjSMD0aW7pZjbff2UJ0zE6OnOPFPVt8BdJZG3eg=";
+  vendorHash = "sha256-FsyqGNg0sZ7sujdaRtgRMzSt24pfMHlUd0wq3n/2/lw=";
 
   meta = {
     description = "Stay on multiple Tailscale tailnets at once!";
