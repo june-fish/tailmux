@@ -12,26 +12,27 @@
   pkg-config,
   webkitgtk_4_1,
   wrapGAppsHook4,
-  fetchgit,
+  fetchFromGitHub,
   libayatana-appindicator,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "tailmux";
-  version = "v1.5.0";
-  src = fetchgit {
-    url = "https://github.com/GrowlyX/tailmux";
-    tag = "v1.3.0";
-    hash = "sha256-ql5Jp5OxL6dNU/VVBC7xhCJVVeUK4MXHrH/dVHXWL8E=";
+  version = "1.9.0";
+  src = fetchFromGitHub {
+    owner = "GrowlyX";
+    repo = "tailmux";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-Qi+f86StUlIQt+l9zANm0eUnbmbVo0gHjPNhaibtIFw=";
   };
 
-  cargoHash = "sha256-ZBBeKOjK187J6Ti1AClNgbVpqrrcqshL7g2Xya7Y0dA=";
+  cargoHash = "sha256-rY4a4SugMrJAvZTfZllaUHP7QM3M7zYtt6Gw/A8b9/g=";
 
   pnpmDeps = fetchPnpmDeps {
     pname = "${finalAttrs.pname}-${finalAttrs.version}-pnpm-deps";
     inherit (finalAttrs) src;
     fetcherVersion = 4;
-    hash = "sha256-wJgH2eAfut/aTlwieMKOaTvaKFtnACDhZErbodXpccs=";
+    hash = "sha256-8zLbpIbKCNBR8rPaz7eu3eFYPb5a/yxZcsajz7mFpFU=";
     sourceRoot = "${finalAttrs.src.name}/desktop";
   };
   pnpmRoot = "desktop";

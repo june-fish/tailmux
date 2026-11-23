@@ -6,7 +6,7 @@
 
 buildGo127Module (finalAttrs: {
   pname = "tailmux";
-  version = "1.5.0";
+  version = "1.9.0";
 
   patches = [ ./0001-fix-systemd-service-path-on-nixos.patch ];
 
@@ -14,10 +14,10 @@ buildGo127Module (finalAttrs: {
     owner = "GrowlyX";
     repo = "tailmux";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-4iUtfB8qm3seAlH4vRpfnWk+4wie6xLfc6OUnZnLpqI=";
+    hash = "sha256-Qi+f86StUlIQt+l9zANm0eUnbmbVo0gHjPNhaibtIFw=";
   };
 
-  vendorHash = "sha256-FsyqGNg0sZ7sujdaRtgRMzSt24pfMHlUd0wq3n/2/lw=";
+  vendorHash = "sha256-cCdGBcJhZp+8hdMaayeGDiGPw8HHarS3YevNOZdwiVc=";
 
   meta = {
     description = "Stay on multiple Tailscale tailnets at once!";

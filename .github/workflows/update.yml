@@ -16,18 +16,39 @@ jobs:
 
       - uses: cachix/install-nix-action@v31
 
+      # Moves the nixpkgs input to the newest stable NixOS release (e.g.
+      # nixos-26.05 -> nixos-26.11) once nixos.org marks it stable.
+      - name: Bump NixOS release
+        run: |
+          latest=$(curl -fsSL "https://monitoring.nixos.org/prometheus/api/v1/query?query=channel_revision" \
+            | jq -r '[.data.result[].metric
+                      | select(.status == "stable" and .variant == "primary")
+                      | .channel
+                      | select(test("^nixos-[0-9]{2}\\.[0-9]{2}$"))]
+                     | sort_by(ltrimstr("nixos-") | split(".") | map(tonumber)) | last')
+          if [ -z "$latest" ] || [ "$latest" = null ]; then
+            echo "Couldn't find the latest stable channel" >&2
+            exit 1
+          fi
+          echo "Latest stable: $latest"
+          sed -i -E "s|channels\.nixos\.org/nixos-[0-9]{2}\.[0-9]{2}/|channels.nixos.org/$latest/|" flake.nix
+
       - name: Update flake inputs
         run: nix flake update
 
-      # Bumps version, src hash and vendorHash to the latest upstream release,
-      # then builds it, so a stale hash or a patch that no longer applies fails
-      # here instead of on someone's machine.
+      # Bump version and every hash to the latest upstream release, then build,
+      # so a stale hash or a patch that no longer applies fails here instead of
+      # on someone's machine.
       - name: Update tailmux
         run: nix run nixpkgs#nix-update -- --flake --build tailmux
 
-      # nix-update skips the build when the package itself is unchanged.
+      - name: Update tailmux-desktop
+        run: nix run nixpkgs#nix-update -- --flake --build tailmux-desktop
+
+      # nix-update skips the build when the package itself is unchanged, and a
+      # release bump alone changes nothing nix-update looks at.
       - name: Build
-        run: nix build .#tailmux
+        run: nix build .#tailmux .#tailmux-desktop
 
       - name: Commit and push
         run: |
@@ -37,8 +58,14 @@ jobs:
           fi
 
           msgs=()
+          if ! git diff --quiet -- flake.nix; then
+            msgs+=("nixpkgs: $(grep -oE 'nixos-[0-9]{2}\.[0-9]{2}' flake.nix)")
+          fi
           if ! git diff --quiet -- tailmux.nix; then
             msgs+=("tailmux: update to $(nix eval --raw .#tailmux.version)")
+          fi
+          if ! git diff --quiet -- tailmux-desktop.nix; then
+            msgs+=("tailmux-desktop: update to $(nix eval --raw .#tailmux-desktop.version)")
           fi
           if ! git diff --quiet -- flake.lock; then
             msgs+=("flake.lock: update")
